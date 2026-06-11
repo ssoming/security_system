@@ -14,7 +14,7 @@
 | 언어 | C, Python |
 | 도구 | STM32CubeIDE, VSCode, Roboflow |
 | 통신 | UART (115200 / 9600 bps), SPI, Bluetooth |
-| 개발 기간 | 2025.03 |
+| 개발 기간 | 2025.03.30 |
 | 팀 구성 | 4인 |
  
 ## 주요 기능
@@ -23,6 +23,7 @@
 - **RFID 잠금 인증** — RC522 SPI 직접 제어, non-blocking FSM으로 카드키 UID 인증
 - **다중 UART 통신** — PC ↔ 중계 MCU ↔ 제어 MCU, DMA Circular 모드 기반 비동기 직렬 통신
 - **이벤트 자동 녹화** — 도난 의심 시 pre-buffer 포함 양방향 카메라 동시 녹화 저장
+
 ## 파일 구성
  
 | 파일 | 역할 |
