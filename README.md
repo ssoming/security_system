@@ -14,7 +14,7 @@
 | 언어 | C, Python |
 | 도구 | STM32CubeIDE, VSCode, Roboflow |
 | 통신 | UART (115200 / 9600 bps), SPI, Bluetooth |
-| 개발 기간 | 2025.03.30 |
+| 개발 기간 | 2025.03 |
 | 팀 구성 | 4인 |
  
 ## 주요 기능
