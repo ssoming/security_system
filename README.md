@@ -40,7 +40,7 @@
 ![C](https://img.shields.io/badge/C-00599C?style=for-the-badge&logo=c&logoColor=white)
 ![STM32](https://img.shields.io/badge/STM32-03234B?style=for-the-badge&logo=stmicroelectronics&logoColor=white)
  
-![block_diagram](security_system.png)
+![block_diagram](SecuritySytem_Blockdiagram.png)
  
 ---
  
