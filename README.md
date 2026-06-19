@@ -1,12 +1,13 @@
 # 택배 수호자 (Parcel Guardian)
  
 > YOLO 객체 인식과 STM32 이중 MCU 구조를 결합한 실시간 택배 도난 감지 보안 시스템
- 
+<!--
 [![Notion](https://img.shields.io/badge/Notion-프로젝트%20상세%20보기-000000?style=for-the-badge&logo=notion&logoColor=white)](https://app.notion.com/p/minseokim-profile/335b5d65c68c80128f18c7779229e943?source=copy_link)
- 
----
+-->
+[![YouTube](https://img.shields.io/badge/YOUTUBE-%ED%94%84%EB%A1%9C%EC%A0%9D%ED%8A%B8%20%EC%98%81%EC%83%81%20%EB%B3%B4%EA%B8%B0-555555?style=for-the-badge&logo=youtube&logoColor=white&labelColor=FF0000)](https://youtu.be/IT9fTA3r7G0?si=RIphoJKs5mb-5Ph8)
 
-## 1. 개요 (Overview)
+
+## 1. Overview
  
 | 항목 | 내용 |
 |------|------|
@@ -18,46 +19,39 @@
 | 팀 구성 | 4인 팀 프로젝트 |
  
 ---
+
+## 2. 주요 기능
  
-## 2. 담당 역할 (My Role)
- 
-- YOLO 커스텀 모델 학습 — 택배 박스 이미지 1,500장 직접 수집·라벨링 후 모델 학습
-- 이벤트 기반 이중 카메라 녹화 시스템 구현 (pre-buffer 포함)
-- Python ↔ STM32 양방향 Serial 통신 설계 및 구현 (이벤트 코드 0~3 / 트리거 4)
+- **도난 상황 인지 및 오인식 방지**: 박스 전용 카메라와 상시 감시 카메라를 독립적으로 운용하여 외부 환경으로 인한 오작동 최소화
+- **실시간 도난 감지 및 증거 확보**: 무단 접근 및 도난 의심 상황 발생 시 자동으로 블랙박스 영상을 녹화하고 저장
+- **안전한 사용자 인증**: 등록된 RFID 카드키를 통해 정당한 사용자를 판별하고 잠금 장치 해제 및 보안 모드 제어
+- **유기적인 시스템 연동**: 감시 장치(PC)와 하드웨어 제어부(MCU) 간의 실시간 데이터 연동으로 공백 없는 모니터링 제공
+
 ---
  
-## 3. 주요 기능 (Key Features)
- 
-- **이중 YOLO 인식** — Camera 1 (박스) / Camera 2 (사람) 모델과 카메라를 분리하여 오인식 방지
-- **RFID 잠금 인증** — RC522 SPI 직접 제어, non-blocking FSM으로 카드키 UID 인증
-- **다중 UART 통신** — PC ↔ 중계 MCU ↔ 제어 MCU, DMA Circular 모드 기반 비동기 직렬 통신
-- **이벤트 자동 녹화** — 도난 의심 시 pre-buffer 포함 양방향 카메라 동시 녹화 저장
+## 3. 담당 역할
+**AI 객체 인식 결과를 활용한 영상 처리 및 임베디드 - PC 간 데이터 통신 시스템 구축**
+- **Pre-buffer 기반 이중 카메라 녹화 시스템 개발 (Python)**  
+  OpenCV 비디오 스트림을 링 버퍼 형태로 메모리에 상시 유지하여, 이벤트 발생 전, 후 5초 영상을 유실 없이 병합 저장하는 알고리즘 구현
+  
+- **Python ↔ STM32 양방향 Serial 통신 설계 및 구현 (이벤트 코드 0~3 / 트리거 4)**
+  인식 결과에 따른 이벤트 코드(0~3) 및 제어 트리거(4) 정의, 예외 처리를 포함한 신뢰성 높은 직렬 통신 파이프라인 구축
 ---
  
-## 4. 기술 스택 및 아키텍처 (Tech Stack & Architecture)
  
-![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white)
-![C](https://img.shields.io/badge/C-00599C?style=for-the-badge&logo=c&logoColor=white)
-![STM32](https://img.shields.io/badge/STM32-03234B?style=for-the-badge&logo=stmicroelectronics&logoColor=white)
- 
-![block_diagram](SecuritySytem_Blockdiagram.png)
- 
----
- 
-## 5. 핵심 구현 및 트러블슈팅 (Key Implementation & Troubleshooting)
+## 4. 시스템 아키텍처 및 핵심 구현
  
 ### 핵심 구현
+
+![block_diagram](SecuritySytem_Blockdiagram.png)
  
-**① pre-buffer 기반 이벤트 녹화**
-이벤트 발생 이전 영상을 메모리 버퍼에 상시 유지하다가 도난 의심 트리거 시 전후 영상을 합산하여 저장한다. 이벤트 전 상황까지 증거로 남길 수 있다.
+| 구현 | 설명 |
+|---|---|
+| **① Pre-buffer 기반 이벤트 녹화** | 이벤트 발생 이전 영상을 메모리 버퍼에 상시 유지하다가 도난 의심 트리거 시 전후 영상을 합산 저장 → 이벤트 전 상황까지 증거로 확보 |
+| **② DMA Circular 비동기 수신** | 중계 MCU에서 UART 수신을 DMA Circular 모드로 처리해 CPU 점유 없이 PC ↔ 제어 MCU 간 데이터를 실시간 중계 |
+| **③ Non-blocking RFID FSM** | SPI 폴링 방식 대신 상태 전이 기반 구조로 RFID 인증과 UART 처리를 병행 동작 |
  
-**② DMA Circular 비동기 수신**
-중계 MCU에서 UART 수신을 DMA Circular 모드로 처리해 CPU 점유 없이 PC ↔ 제어 MCU 간 데이터를 실시간 중계한다.
- 
-**③ non-blocking RFID FSM**
-SPI 폴링 방식 대신 상태 전이 기반 구조로 RFID 인증과 UART 처리를 병행 동작시켰다.
- 
-### 트러블슈팅
+## 5. 트러블슈팅
  
 | 발생 문제 | 발생 원인 | 해결 방안 | 결과 |
 |-----------|-----------|-----------|------|
